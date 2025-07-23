@@ -16,6 +16,7 @@ import { ContratoModule } from './contrato/contrato.module';
 import { environments } from './environments';
 import config from './config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     PreventiveMaintenanceModule,
     CorrectiveMaintenanceModule,
     CobranzaModule,
-    ContratoModule],
+    ContratoModule,
+    UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
