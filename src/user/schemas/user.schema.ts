@@ -5,6 +5,26 @@ import { Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
+export interface IUser {
+    _id: Types.ObjectId;
+    companyId: Types.ObjectId;
+    email: string;
+    phone: string;
+    name: string;
+    lastname: string;
+    password: string;
+    otp: string;
+    secret: string;
+    roleId: Types.ObjectId;
+    active: boolean;
+    activeOtp: boolean;
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
+    avatar?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 @Schema()
 export class User {
 

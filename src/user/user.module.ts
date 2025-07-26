@@ -18,7 +18,7 @@ import { UserRoleService } from './services/user-role.service';
       { name: Company.name, schema: CompanySchema },
     ])
   ],
-  providers: [UserService, CompanyService],
+  providers: [UserService, CompanyService, UserRoleService],
   controllers: [UserController, CompanyController, UserRoleController],
   exports: [UserService, CompanyService, UserRoleService]
 })

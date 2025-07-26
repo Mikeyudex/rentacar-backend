@@ -91,4 +91,24 @@ export class UserService {
         }
     }
 
+    async findByEmail(email: string): Promise<UserDocument> {
+        try {
+            const user = await this.userModel.findOne({ email }).exec();
+            if (!user) {
+                throw new NotFoundException({
+                    statusCode: 404,
+                    message: 'No se ha encontrado el usuario',
+                    error: 'No se ha encontrado el usuario',
+                });
+            }
+            return user;
+        } catch (error) {
+            throw new InternalServerErrorException({
+                statusCode: 500,
+                message: 'Error interno del servidor',
+                error: error.message || 'Unknown error',
+            });
+        }
+    }
+
 }
