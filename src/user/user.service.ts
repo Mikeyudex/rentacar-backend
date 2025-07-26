@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 import { User, UserDocument } from './schemas/user.schema';
 import { ApiResponse } from 'src/common/api-response';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { IUserResponse } from './interfaces/user-response.interface';
 
 
 @Injectable()
@@ -48,11 +50,25 @@ export class UserService {
         }
     }
 
-    async createUser(createUserDto: CreateUserDto): Promise<ApiResponse<UserDocument>> {
+    async createUser(createUserDto: CreateUserDto): Promise<ApiResponse<IUserResponse>> {
         try {
             const user = new this.userModel(createUserDto);
+            const hashPassword = await bcrypt.hash(user.password, 10);
+            user.password = hashPassword;
             const createdUser = await user.save();
-            return ApiResponse.success('Success', createdUser);
+            let mapUser: IUserResponse = {
+                _id: createdUser._id!.toString(),
+                companyId: createdUser.companyId.toString(),
+                email: createdUser.email,
+                phone: createdUser.phone,
+                name: createdUser.name,
+                lastname: createdUser.lastname,
+                roleId: createdUser.roleId.toString(),
+                active: createdUser.active,
+                avatar: createdUser?.avatar || '',
+                createdAt: createdUser.createdAt ? createdUser.createdAt.toString() : '',
+            }
+            return ApiResponse.success('Success', mapUser);
         } catch (error) {
             throw new InternalServerErrorException({
                 statusCode: 500,

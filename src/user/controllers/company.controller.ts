@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CompanyService } from "../services/company.service";
-import { UpdateCompanyDto } from "../dto/company.dto";
+import { CreateCompanyDto, UpdateCompanyDto } from "../dto/company.dto";
 
 @Controller('company')
 export class CompanyController {
@@ -22,6 +22,11 @@ export class CompanyController {
     @Get('name/:name')
     async getCompanyByName(@Param('name') name: string) {
         return this.companyService.getCompanyByName(name);
+    }
+
+    @Post()
+    async createCompany(@Body() createCompanyDto: CreateCompanyDto) {
+        return this.companyService.createCompany(createCompanyDto);
     }
 
     @Put(':id')

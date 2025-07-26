@@ -6,6 +6,7 @@ import { PayloadToken } from './models/token.model';
 import { UserService } from '../user/user.service';
 import { ApiResponse } from '../common/api-response';
 import { IUser } from 'src/user/schemas/user.schema';
+import { IUserResponse } from 'src/user/interfaces/user-response.interface';
 @Injectable()
 export class AuthService {
   constructor(
@@ -31,9 +32,21 @@ export class AuthService {
 
   generateJwt(user: IUser) {
     const payload: PayloadToken = { sub: user._id.toString(), role: user.roleId.toString(), companyId: user.companyId.toString() };
+    let mapUser: IUserResponse = {
+      _id: user._id.toString(),
+      companyId: user.companyId.toString(),
+      email: user.email,
+      phone: user.phone,
+      name: user.name,
+      lastname: user.lastname,
+      roleId: user.roleId.toString(),
+      active: user.active,
+      avatar: user?.avatar || '',
+      createdAt: user.createdAt ? user.createdAt.toString() : '',
+    }
     let loginResponse = {
       access_token: this.jwtService.sign(payload),
-      user: user
+      user: mapUser
     };
     return ApiResponse.success('Login exitoso', loginResponse, 200);
   }
@@ -49,7 +62,7 @@ export class AuthService {
 
   validateTokenGlobal(token: string): boolean {
     try {
-       this.jwtService.verify(token);
+      this.jwtService.verify(token);
       return true;
     } catch (error) {
       return false;
