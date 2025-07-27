@@ -18,6 +18,7 @@ import config from './config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { AuthModule } from './auth/auth.module';
     CobranzaModule,
     ContratoModule,
     UserModule,
-    AuthModule],
+    AuthModule,
+    UploadModule],
   controllers: [AppController],
   providers: [AppService],
 })
