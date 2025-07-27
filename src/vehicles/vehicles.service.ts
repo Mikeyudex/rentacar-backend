@@ -154,8 +154,8 @@ export class VehiclesService {
 
             let mapVehicle: VehicleResponse = {
                 ...createdVehicle.toObject(),
-                id: createdVehicle._id!.toString(),
-                companyId: createdVehicle.companyId!.toString(),
+                id: createdVehicle._id!?.toString() ?? "",
+                companyId: createdVehicle.companyId!?.toString() ?? "",
                 createdAt: createdVehicle.createdAt!,
                 updatedAt: createdVehicle.updatedAt!,
             };

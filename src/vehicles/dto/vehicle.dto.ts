@@ -1,7 +1,9 @@
 import {
   IsNotEmpty,
   IsOptional,
-  IsString
+  IsString,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 
 export class CreateVehicleDto {
@@ -28,6 +30,8 @@ export class CreateVehicleDto {
 
     @IsNotEmpty()
     @IsString()
+    @MaxLength(17)
+    @MinLength(17)
     numVin: string;
 
     @IsNotEmpty()
