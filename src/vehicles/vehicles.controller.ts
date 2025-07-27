@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto, UpdateVehicleDto } from './dto/vehicle.dto';
 
@@ -9,8 +9,24 @@ export class VehiclesController {
     ) { }
 
     @Get()
-    async getVehicles() {
-        return this.vehiclesService.getVehicles();
+    async getVehicles(
+        @Query('page') page = 1,
+        @Query('limit') limit = 10,
+        @Query('search') search?: string,
+        @Query('marca') marca?: string,
+        @Query('color') color?: string,
+        @Query('sortBy') sortBy = 'patente',
+        @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'asc',
+    ) {
+        return this.vehiclesService.getVehicles({
+            page: Number(page),
+            limit: Number(limit),
+            search,
+            marca,
+            color,
+            sortBy,
+            sortOrder,
+        });
     }
 
     @Get(':id')
