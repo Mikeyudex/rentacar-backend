@@ -13,16 +13,16 @@ export class Customer {
     @Prop({ required: true, type: String })
     apellidos: string;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: true, type: String, unique: true })
     rut: string;
 
     @Prop({ required: true, type: String })
     direccion: string;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: true, type: String, unique: true })
     email: string;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: true, type: String, unique: true })
     telefono: string;
 
     @Prop({ required: false, type: String })

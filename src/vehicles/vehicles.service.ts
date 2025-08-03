@@ -176,8 +176,8 @@ export class VehiclesService {
         try {
             let castedId = new Types.ObjectId(id);
             if (!Types.ObjectId.isValid(castedId)) {
-                throw new NotFoundException({
-                    statusCode: 404,
+                throw new BadRequestException({
+                    statusCode: 400,
                     message: "ID inválido",
                     error: "El ID proporcionado no es válido",
                 });
@@ -233,7 +233,7 @@ export class VehiclesService {
 
                     throw new BadRequestException({
                         statusCode: 400,
-                        message: `Ya existe un vehículo con este ${field}`,
+                        message: `Ya existe un vehículo con este campo: ${field}`,
                     });
                 }
             }
