@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigType } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -39,6 +41,10 @@ import { UploadModule } from './upload/upload.module';
         uri: configService.database.uri,
       }),
       inject: [config.KEY],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'static'),
+      serveRoot: '/static',
     }),
     VehiclesModule,
     ControlDocumentalModule,

@@ -10,28 +10,28 @@ export class ControlDocumental {
     @Prop({ required: true, type: Types.ObjectId, ref: 'Vehicle' })
     vehicleId: Types.ObjectId;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     padron: string;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     permisoCirculacionFile: string;
 
-    @Prop({ required: true, type: Date })
+    @Prop({ required: false, type: Date })
     permisoCirculacionExpiracion: Date;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     revisionTecnicaFile: string;
 
-    @Prop({ required: true, type: Date })
+    @Prop({ required: false, type: Date })
     revisionTecnicaExpiracion: Date;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     seguroObligatorioFile: string;
 
-    @Prop({ required: true, type: Date })
+    @Prop({ required: false, type: Date })
     seguroObligatorioExpiracion: Date;
 
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     seguroGeneralFile: string;
     
     @Prop({ default: () => getCurrentUTCDate() })

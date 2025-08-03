@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import * as moment from 'moment';
 import { ControlDocumental, ControlDocumentalDocument } from './control-documental.schema';
 import { PaginatedResponse } from 'src/common/interfaces/paginated.interface';
 import { ApiResponse } from 'src/common/api-response';
 import { CreateControlDocumentalDto, UpdateControlDocumentalDto } from './dto/control-documental.dto';
+import { getCurrentUTCDate } from 'src/utils/getUtcDate';
 
 interface GetControlDocumentalsParams {
     page: number
@@ -69,9 +71,9 @@ export class ControlDocumentalService {
         }
     }
 
-    async getById(id: string): Promise<ApiResponse<ControlDocumental>> {
+    async getByVehicleId(vehicleId: string): Promise<ApiResponse<ControlDocumental>> {
         try {
-            let castedId = new Types.ObjectId(id);
+            let castedId = new Types.ObjectId(vehicleId);
             // Validar ObjectId
             if (!Types.ObjectId.isValid(castedId)) {
                 throw new BadRequestException({
@@ -81,7 +83,7 @@ export class ControlDocumentalService {
                 });
             }
 
-            const controlDocumental = await this.controlDocumentalModel.findById(id).exec();
+            const controlDocumental = await this.controlDocumentalModel.findOne({ vehicleId: castedId }).exec();
 
             if (!controlDocumental) {
                 throw new NotFoundException({
@@ -103,9 +105,39 @@ export class ControlDocumentalService {
         }
     }
 
-    async create(createControlDocumentalDto: CreateControlDocumentalDto): Promise<ApiResponse<ControlDocumental>> {
+    async create(dto: CreateControlDocumentalDto): Promise<ApiResponse<ControlDocumental>> {
         try {
-            const controlDocumental = new this.controlDocumentalModel(createControlDocumentalDto);
+            if (!dto.vehicleId) {
+                throw new BadRequestException({
+                    statusCode: 400,
+                    message: 'ID del vehículo no puede ser nulo',
+                    error: 'El ID del vehículo no puede ser nulo',
+                });
+            }
+
+            if (!Types.ObjectId.isValid(dto.vehicleId)) {
+                throw new BadRequestException({
+                    statusCode: 400,
+                    message: 'ID del vehñiculo no es válido',
+                    error: 'El ID del vehículo no es válido',
+                });
+            }
+            if(!dto.padron) dto.padron = "";
+            if(!dto.seguroGeneralFile) dto.seguroGeneralFile = "";
+
+            dto.vehicleId = new Types.ObjectId(dto.vehicleId);
+
+            if (dto.permisoCirculacionExpiracion && moment.isDate(dto.permisoCirculacionExpiracion)) {
+                dto.permisoCirculacionExpiracion = moment(dto.permisoCirculacionExpiracion, 'YYYY-MM-DD').toDate();
+            }
+            if (dto.revisionTecnicaExpiracion && moment.isDate(dto.revisionTecnicaExpiracion)) {
+                dto.revisionTecnicaExpiracion = moment(dto.revisionTecnicaExpiracion, 'YYYY-MM-DD').toDate();
+            }
+            if (dto.seguroObligatorioExpiracion && moment.isDate(dto.seguroObligatorioExpiracion)) {
+                dto.seguroObligatorioExpiracion = moment(dto.seguroObligatorioExpiracion, 'YYYY-MM-DD').toDate();
+            }
+
+            const controlDocumental = new this.controlDocumentalModel(dto);
             const createdControlDocumental = await controlDocumental.save();
             return ApiResponse.success('Control documental creado exitosamente', createdControlDocumental);
         } catch (error) {
@@ -139,6 +171,7 @@ export class ControlDocumentalService {
 
             const updatedData: Partial<ControlDocumental> = {
                 ...updateControlDocumentalDto,
+                updatedAt: getCurrentUTCDate(),
             };
 
             const updatedControlDocumental = await this.controlDocumentalModel.findByIdAndUpdate(id, updatedData, {

@@ -16,7 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalFilters(new MongooseValidationFilter());
-  app.useGlobalFilters(new AllExceptionsFilter());
+  /* app.useGlobalFilters(new AllExceptionsFilter()); */
 
   // Configurar CORS
   app.enableCors({

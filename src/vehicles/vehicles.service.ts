@@ -84,8 +84,8 @@ export class VehiclesService {
             let castedId = new Types.ObjectId(id);
             // Validar ObjectId
             if (!Types.ObjectId.isValid(castedId)) {
-                throw new NotFoundException({
-                    statusCode: 404,
+                throw new BadRequestException({
+                    statusCode: 400,
                     message: 'ID inválido',
                     error: 'El ID proporcionado no es válido',
                 });
@@ -221,7 +221,7 @@ export class VehiclesService {
             if (conditions.length > 0) {
                 const duplicate = await this.vehicleModel.findOne({
                     $or: conditions,
-                    _id: { $ne: id }, // Excluir el vehículo actual
+                    _id: { $ne: castedId }, // Excluir el vehículo actual
                 });
 
                 if (duplicate) {
