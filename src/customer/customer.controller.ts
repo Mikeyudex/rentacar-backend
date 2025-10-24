@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { CreateCustomerDto, UpdateCustomerDto } from './customer.dto';
 
 @Controller('customer')
 export class CustomerController {
@@ -34,13 +35,13 @@ export class CustomerController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async createCustomer(@Body() createCustomerDto) {
+    async createCustomer(@Body() createCustomerDto: CreateCustomerDto) {
         return this.customerService.create(createCustomerDto);
     }
 
     @UseGuards(JwtAuthGuard)
     @Put(':id')
-    async updateCustomer(@Param('id') id: string, @Body() updateCustomerDto) {
+    async updateCustomer(@Param('id') id: string, @Body() updateCustomerDto : UpdateCustomerDto) {
         return this.customerService.update(id, updateCustomerDto);
     }
 
@@ -51,8 +52,8 @@ export class CustomerController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete(':ids')
-    async bulkDeleteCustomer(@Param('ids') ids: string[]) {
+    @Delete('bulkDelete')
+    async bulkDeleteCustomer(@Body() ids: string[]) {
         return this.customerService.bulkDelete(ids);
     }
 }
